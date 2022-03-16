@@ -31,7 +31,7 @@ function createTableElements(lastWeekNumber) {
 			rotation = [getFormatedDate(startDate), getFormatedDate(endDate)].concat(rotation);
 
 			var cell = document.createElement("td");
-			cell.id = jobs[j];
+			cell.id = headers[j];
 			var cellText = document.createTextNode(rotation[j]);
 
 			cell.appendChild(cellText);
