@@ -17,6 +17,7 @@ function createTableElements(lastWeekNumber) {
 
 	var tblBody = document.createElement("tbody");
 
+	var headers = ["From", "To"].concat(jobs);
 
 	// cells creation
 	for (var i = lastWeekNumber; i < getWeekNumber(new Date()); i++) {
@@ -30,7 +31,7 @@ function createTableElements(lastWeekNumber) {
 			rotation = [getFormatedDate(startDate), getFormatedDate(endDate)].concat(rotation);
 
 			var cell = document.createElement("td");
-			cell.id = rotation[j];
+			cell.id = jobs[j];
 			var cellText = document.createTextNode(rotation[j]);
 
 			cell.appendChild(cellText);
