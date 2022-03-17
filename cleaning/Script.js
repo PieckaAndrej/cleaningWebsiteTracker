@@ -1,26 +1,30 @@
-const people = ["Allan", "Jakub", "Andrej"]
+const people = ["Jakub", "Andrej", "Allan"]
 const jobs = ["Living room / Cat poop", "Bathroom / Dishwasher", "Kitchen / Cat food"]
 const firstWeekDate = new Date(2022, 0, 17);
 
 function createTableHistory() {
-	createTableHeaders();
-	createTableElements(0);
+	createTableHeaders(true);
+	createTableElements(0, true);
 }
 
 function createTableNow() {
-	createTableHeaders();
-	createTableElements(getWeekNumber(new Date()) - 1);
+	createTableHeaders(false);
+	createTableElements(getWeekNumber(new Date()), false);
 }
 
-function createTableElements(lastWeekNumber) {
+function createTableElements(lastWeekNumber, fromTo) {
 	var table = document.getElementById("table-head");
 
 	var tblBody = document.createElement("tbody");
 
-	var headers = ["From", "To"].concat(jobs);
+	var headers = jobs;
+ 
+	if (fromTo) {
+		headers = ["From", "To"].concat(jobs);
+	}
 
 	// cells creation
-	for (var i = lastWeekNumber; i < getWeekNumber(new Date()); i++) {
+	for (var i = lastWeekNumber; i <= getWeekNumber(new Date()); i++) {
 		var row = document.createElement("tr");
 
 		for (var j = 0; j < headers.length; j++) {
@@ -46,15 +50,18 @@ function createTableElements(lastWeekNumber) {
 
 }
 
-function createTableHeaders() {
+function createTableHeaders(fromTo) {
 	var element = document.getElementById("table");
 
 	var tbl = document.createElement("table");
 	tbl.id = "table-head"
 	var tblBody = document.createElement("tbody");
 
-
-	var headers = ["From", "To"].concat(jobs);
+	var headers = jobs;
+ 
+	if (fromTo) {
+		headers = ["From", "To"].concat(jobs);
+	}
 
 	var row = document.createElement("tr");
 
@@ -124,17 +131,23 @@ function getNormalizedTimeString(text) {
 function getFormatedDate(date) {
 	const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 	const offset = date.getTimezoneOffset()
-	/*
-	date = new Date(date.getTime() - (offset*60*1000))
-	return date.toISOString().split('T')[0]
-	*/
 	return new Date(date.getTime() - (offset*60*1000)).toLocaleDateString(undefined, options);
 }
 
 function getWeekNumber(date) {
-	var numberOfDays = Math.floor((date - firstWeekDate) / (24 * 60 * 60 * 1000));
-	var result = Math.ceil((date.getDay() + 1 + numberOfDays) / 7);
-
-	return result;
+	return getWeekNumberFromStartOfYear(date) - getWeekNumberFromStartOfYear(firstWeekDate);
 }
 
+function getWeekNumberFromStartOfYear(d) {
+    // Copy date so don't modify original
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    // Set to nearest Thursday: current date + 4 - current day number
+    // Make Sunday's day number 7
+	d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+    // Get first day of year
+    var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+    // Calculate full weeks to nearest Thursday
+    var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+    // Return array of year and week number
+    return  weekNo;
+} 
