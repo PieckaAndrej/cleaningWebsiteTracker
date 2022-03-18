@@ -91,10 +91,10 @@ Date.prototype.addDays = function(days) {
 function updateTable() {
 	let rotation = getRotation(new Date());
 
-	document.getElementById(jobs[0]).innerHTML = rotation[0];
-	document.getElementById(jobs[1]).innerHTML = rotation[1];
-	document.getElementById(jobs[2]).innerHTML = rotation[2];
+	for (var i = 0; i < people.length; i++) {
+		document.getElementById(jobs[i]).innerHTML = rotation[i];
 
+	}
 	updateLastUpdatedLabel();
 
 	setTimeout(updateTable, 1000 * 60); //update every minute
